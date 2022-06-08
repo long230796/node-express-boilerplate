@@ -42,7 +42,12 @@ const updateHero = {
         categories: Joi.string(),
         attack: Joi.number(),
         defense: Joi.number(),
-        equipment: Joi.object(),
+        equipment: Joi.object().keys({
+            weapon: Joi.string(),
+            shirt: Joi.string(),
+            trouser: Joi.string(),
+            hat: Joi.string(),
+        })
     })
     .min(1),
 };

@@ -1,21 +1,21 @@
 const express = require('express');
 const auth = require('../../middlewares/auth');
 const validate = require('../../middlewares/validate');
-const heroValidation = require('../../validations/hero.validation');
-const heroController = require('../../controllers/hero.controller');
+const equipValidation = require('../../validations/equipment.validation');
+const equipController = require('../../controllers/equipment.controller');
 
 const router = express.Router();
 
 router
   .route('/')
-  .post(validate(heroValidation.createHero), heroController.createHero)
-  .get(validate(heroValidation.getHero), heroController.getHeros);
+  .post(validate(equipValidation.createEquip), equipController.createEquip)
+  .get(validate(equipValidation.getEquip), equipController.getEquips);
 
 router
-  .route('/:heroId')
-  .get(validate(heroValidation.getHero), heroController.getHero)
-  .patch(validate(heroValidation.updateHero), heroController.updateHero)
-  .delete(validate(heroValidation.deleteHero), heroController.deleteHero);
+  .route('/:equipId')
+  .get(validate(equipValidation.getEquip), equipController.getEquip)
+  .patch(validate(equipValidation.updateEquip), equipController.updateEquip)
+  .delete(validate(equipValidation.deleteEquip), equipController.deleteEquip);
 
 module.exports = router;
 
