@@ -1,5 +1,6 @@
 const httpStatus = require('http-status');
 const { Hero } = require('../models');
+const { Equip } = require('../models');
 const ApiError = require('../utils/ApiError');
 
 /**
@@ -28,13 +29,41 @@ const queryHeros = async (filter, options) => {
   return heros;
 };
 
+const populationEquip = async (hero) => {
+    Hero
+    .findById(hero._id)
+    .populate("equipment.weapon")
+    .populate("equipment.shirt")
+    .exec(function (err, newHero) {
+      if (err) return handleError(err);
+      console.log(newHero)
+      console.log(hero)
+      return newHero;
+    });
+}
+
 /**
  * Get hero by id
  * @param {ObjectId} id
  * @returns {Promise<Hero>}
  */
 const getHeroById = async (id) => {
-  return Hero.findById(id);
+  return await Hero
+        .findById(id)
+        .populate({ 
+          path: 'equipment',
+          populate: [
+            {
+              path: 'weapon',
+              model: 'Equip'
+            },
+            {
+              path: 'shirt',
+              model: 'Equip'
+            }
+          ]
+       })
+
 };
 
 /**
@@ -60,7 +89,7 @@ const updateHeroById = async (heroId, updateBody) => {
   if (updateBody.name && (await Hero.isNameTaken(updateBody.name, heroId))) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'name already taken');
   }
-  
+
   Object.assign(hero, updateBody);
   await hero.save();
   return hero;
@@ -87,4 +116,5 @@ module.exports = {
   getHeroByName,
   updateHeroById,
   deleteHeroById,
+  populationEquip
 };
